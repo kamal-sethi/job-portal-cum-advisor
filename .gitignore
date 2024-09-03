@@ -1,0 +1,11 @@
+# Ignore environment variables
+.env
+
+# Ignore compiled output
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Ignore node modules
+node_modules/
