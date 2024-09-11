@@ -1,5 +1,5 @@
 import { trusted } from "mongoose";
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -121,26 +121,26 @@ export const logoutUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { fullName, email, bio, skills, phoneNumber } = req.body;
-    if (!fullName || !email || !bio || !skills || !phoneNumber) {
-      return res.status(400).json({
-        message: "something is missing",
-        success: false,
-      });
+    let skillsArray;
+    if (skills) {
+      skillsArray = skills.split(",");
     }
 
-    const skillsArray = skills.split(",");
     const userId = req.id;
-    let user = await User.findOne(userId);
+    console.log(userId);
+    let user = await User.findById(userId);
+    console.log(user);
     if (!user) {
       return res
         .status(400)
         .json({ message: "user not found", success: false });
     }
-    (user.fullName = fullName),
-      (user.email = email),
-      (user.phoneNumber = phoneNumber),
-      (user.profile.bio = bio),
-      (user.profile.skills = skillsArray);
+    if (fullName) user.fullName = fullName;
+
+    if (email) user.email = email;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+    if (bio) user.profile.bio = bio;
+    if (skills) user.profile.skills = skillsArray;
 
     await user.save();
 

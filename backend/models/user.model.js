@@ -18,18 +18,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      enum: ["recruiter", "jobseeker"],
+      required: true,
+    },
     profile: {
       bio: { type: String },
       skills: [
         {
-          type: string,
+          type: String,
         },
       ],
       profilePhoto: { type: String, default: "" },
       resume: { type: String },
       resumeOriginalName: { type: String },
       company: { type: mongoose.Schema.Types.ObjectId, ref: "company" },
-      role: { type: String, enum: ["recruiter", "jobseeker"], required: true },
     },
   },
   { timestamps: true }

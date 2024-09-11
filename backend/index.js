@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
 dotenv.config({});
 import userRoute from "./routes/user.route.js";
+import companyRoute from "./routes/company.route.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -19,7 +20,8 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 //api's
-app.use("api/v1/user", userRoute);
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/company", companyRoute);
 
 app.listen(PORT, () => {
   connectDB();
