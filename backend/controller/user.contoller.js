@@ -105,3 +105,59 @@ export const loginUser = async (req, res) => {
     console.log(error);
   }
 };
+
+export const logoutUser = async (req, res) => {
+  try {
+    return res.status(201).cookie("token", "", { maxAge: 0 }).json({
+      message: "user logout successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//update userinfo
+export const updateUser = async (req, res) => {
+  try {
+    const { fullName, email, bio, skills, phoneNumber } = req.body;
+    if (!fullName || !email || !bio || !skills || !phoneNumber) {
+      return res.status(400).json({
+        message: "something is missing",
+        success: false,
+      });
+    }
+
+    const skillsArray = skills.split(",");
+    const userId = req.id;
+    let user = await User.findOne(userId);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "user not found", success: false });
+    }
+    (user.fullName = fullName),
+      (user.email = email),
+      (user.phoneNumber = phoneNumber),
+      (user.profile.bio = bio),
+      (user.profile.skills = skillsArray);
+
+    await user.save();
+
+    user = {
+      id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+    };
+
+    return res.status(201).json({
+      message: "Profile updated successfully",
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
